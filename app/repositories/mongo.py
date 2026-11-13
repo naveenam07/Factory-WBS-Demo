@@ -11,6 +11,19 @@ from app.repositories.base import Repositories
 DUPLICATE_KEY_ERROR = 11000
 SEED_MARKER_ID = "seed"
 
+# Balances are stored as doubles, so plain $inc drifts (10000 - 9999.95 == 0.04999...).
+# Comparing and storing in whole cents keeps the stored value equal to what callers see.
+BALANCE_IN_CENTS = {"$floor": {"$add": [{"$multiply": ["$cash_balance", 100]}, 0.5]}}
+
+
+def _to_cents(amount: float) -> float:
+    # A float, not an int: BSON ints overflow past 8 bytes, while floats stay exact to 2**53.
+    return round(amount * 100, 0)
+
+
+def _set_balance_from_cents(cents: dict[str, Any]) -> list[dict[str, Any]]:
+    return [{"$set": {"cash_balance": {"$divide": [cents, 100]}}}]
+
 
 def ensure_indexes(db: Database) -> None:
     db["advisors"].create_index([("advisor_id", ASCENDING)], unique=True)
@@ -52,16 +65,17 @@ class MongoAccountRepository:
     def adjust_balance(self, account_id: str, delta: float) -> float:
         doc = self._collection.find_one_and_update(
             {"account_id": account_id},
-            {"$inc": {"cash_balance": delta}},
+            _set_balance_from_cents({"$add": [BALANCE_IN_CENTS, _to_cents(delta)]}),
             return_document=ReturnDocument.AFTER,
         )
         return round(doc["cash_balance"], 2)
 
     def withdraw(self, account_id: str, amount: float) -> float | None:
         """Debit the account only if it holds enough cash; returns None otherwise."""
+        cents = _to_cents(amount)
         doc = self._collection.find_one_and_update(
-            {"account_id": account_id, "cash_balance": {"$gte": amount}},
-            {"$inc": {"cash_balance": -amount}},
+            {"account_id": account_id, "$expr": {"$gte": [BALANCE_IN_CENTS, cents]}},
+            _set_balance_from_cents({"$subtract": [BALANCE_IN_CENTS, cents]}),
             return_document=ReturnDocument.AFTER,
         )
         return round(doc["cash_balance"], 2) if doc else None

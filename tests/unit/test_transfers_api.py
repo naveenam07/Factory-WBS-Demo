@@ -59,8 +59,9 @@ def test_account_not_assigned_to_advisor_returns_403(app_client, database, field
     assert database["transfers"].count_documents({}) == 0
 
 
-def test_insufficient_funds_returns_409_and_moves_nothing(app_client, database) -> None:
-    response = _post(app_client, amount=10_000.01)
+@pytest.mark.parametrize("amount", [10_000.01, 1e20, 1e308])
+def test_insufficient_funds_returns_409_and_moves_nothing(app_client, database, amount) -> None:
+    response = _post(app_client, amount=amount)
 
     assert response.status_code == 409
     assert response.json()["message"] == "Insufficient funds in account ACC-000001"

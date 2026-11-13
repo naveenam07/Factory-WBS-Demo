@@ -66,6 +66,34 @@ def test_unknown_advisor_is_forbidden(repositories: Repositories, database) -> N
     assert database["transfers"].count_documents({}) == 0
 
 
+def test_remaining_cents_can_be_moved_after_near_full_transfer(
+    repositories: Repositories, database
+) -> None:
+    service = TransferService(repositories)
+
+    first = service.transfer(_instruction(amount=9_999.95))
+    assert first.source_balance == 0.05
+    second = service.transfer(_instruction(amount=0.05))
+
+    assert second.source_balance == 0.0
+    assert second.destination_balance == 30_000.0
+    assert _balance(database, "ACC-000001") == 0.0
+    assert _balance(database, "ACC-000002") == 30_000.0
+
+
+def test_drifted_stored_balance_is_compared_in_cents(
+    repositories: Repositories, database
+) -> None:
+    database["accounts"].update_one(
+        {"account_id": "ACC-000001"}, {"$set": {"cash_balance": 10_000.0 - 9_999.95}}
+    )
+
+    result = TransferService(repositories).transfer(_instruction(amount=0.05))
+
+    assert result.source_balance == 0.0
+    assert _balance(database, "ACC-000001") == 0.0
+
+
 def test_insufficient_funds_moves_nothing(repositories: Repositories, database) -> None:
     with pytest.raises(InsufficientFundsError, match="Insufficient funds in account ACC-000001"):
         TransferService(repositories).transfer(_instruction(amount=10_000.01))
