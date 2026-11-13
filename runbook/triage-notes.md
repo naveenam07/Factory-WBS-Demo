@@ -16,6 +16,7 @@ Notes the triage workflow (`automations/triage.md`) appends after each run, so t
 - To find which accounts have missing data without touching PII, use the public API, which returns only `last4`: `curl -s http://localhost:30080/api/v1/advisors/<advisor>/accounts` and print `account_id`, `account_type`, `last4`. Order logs do not include the account, so this is how to tie a 500 to specific accounts.
 - A failing order is safe to replay as a live check: `POST /api/v1/orders` raises before the insert, so nothing is written. Do not replay a request that succeeds, because that books a real order.
 - Live checks: `curl -s http://localhost:30080/static/api-routes.json` shows the route map the portal actually uses, and `curl -s http://localhost:30080/openapi.json` lists the real FastAPI paths.
+- Sign-in problems: the trading app has no login, password or session endpoints (`rg -i "login|password|auth|signin" app` finds nothing), and the logs have no 401 or 403. To confirm an advisor can otherwise use the portal, check their latest access lines (`advisor_id` match, `status` not null) for 200s.
 
 ## Symptoms and classifications
 
@@ -37,3 +38,4 @@ Notes the triage workflow (`automations/triage.md`) appends after each run, so t
 - HD-4822 (#2) was closed as a duplicate of #1. Its traceId showed `POST /api/v2/transfers 404` for advisor A-1007, who was already in the affected list. At 04:04 UTC the 404s were still happening (81 in the 03:04 to 04:04 window).
 - HD-4823 (#3) is the original "Place trade fails with 500" ticket. Close later tickets as duplicates of #3 if their traceId shows `POST /api/v1/orders 500` with the `account_type.upper()` AttributeError.
 - HD-4824 (#4) is the original "positions slow to load" ticket. Close later slow Account page tickets as duplicates of #4 if their traceId shows `GET /api/v1/accounts/<id>/positions 200` at about 3000 ms.
+- Forgot password or account lockout -> NOISE. Route to the WaveBank IT Service Desk (IAM password reset process), add the `noise` label and close as not planned. HD-4825 (#5, advisor A-1015, no traceId) was closed this way: no auth endpoints in the app, no 401 or 403 in 03:15 to 04:15 UTC, and A-1015's requests returned 200 until 04:04 UTC. NOISE tickets get no #trading-incidents post.
