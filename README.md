@@ -113,6 +113,7 @@ prompt Droid runs; `automations/README.md` explains how to extract and run them.
 | `fix-with-guardrails.md` | Fix a triaged issue and open a PR | Manual, after triage labels the issue `fix-needed` |
 | `weekly-report.md`       | Weekly reliability report | Scheduled, Fridays 4pm America/New_York |
 | `cve-scan.md`            | Dependency vulnerability scan and upgrade PR | Scheduled, Mondays 13:00 UTC |
+| `slack-intake.md`        | Slack intake: turn a #trading-app-support report into a help-desk issue, triage it and open a fix PR | A new top-level message in #trading-app-support, picked up by a watcher on the Droid Computer |
 
 Weekly reports are proposed by pull request under `reports/weekly/`. Triage keeps its running notes
 in `runbook/triage-notes.md`. These workflows only author changes; a human code owner approves and
