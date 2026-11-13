@@ -1,0 +1,25 @@
+# Code owners for Factory-WBS-Demo.
+# In this demo @naveenam07 owns every path. The comments name the squad that owns
+# each area in production.
+
+# Default owner for everything not listed below.
+*                               @naveenam07
+
+# Orders and positions: trading squad
+/app/api/orders.py              @naveenam07
+/app/api/positions.py           @naveenam07
+/app/services/orders.py         @naveenam07
+/app/services/positions.py      @naveenam07
+/app/services/pricing.py        @naveenam07
+/app/services/market_data.py    @naveenam07
+
+# Transfers: money-movement squad
+/app/api/transfers.py           @naveenam07
+/app/services/transfers.py      @naveenam07
+
+# Templates and static: advisor-portal squad
+/app/templates/                 @naveenam07
+/app/static/                    @naveenam07
+
+# deploy/: platform team
+/deploy/                        @naveenam07
