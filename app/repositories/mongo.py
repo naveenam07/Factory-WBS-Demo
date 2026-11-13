@@ -57,6 +57,15 @@ class MongoAccountRepository:
         )
         return round(doc["cash_balance"], 2)
 
+    def withdraw(self, account_id: str, amount: float) -> float | None:
+        """Debit the account only if it holds enough cash; returns None otherwise."""
+        doc = self._collection.find_one_and_update(
+            {"account_id": account_id, "cash_balance": {"$gte": amount}},
+            {"$inc": {"cash_balance": -amount}},
+            return_document=ReturnDocument.AFTER,
+        )
+        return round(doc["cash_balance"], 2) if doc else None
+
 
 class MongoPositionRepository:
     def __init__(self, db: Database) -> None:
