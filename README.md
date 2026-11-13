@@ -72,6 +72,8 @@ deploy/
   kind-config.yaml  One-node kind cluster mapping host port 30080
   k8s/              Namespace, MongoDB StatefulSet and the trading-app Deployment and Service
 scripts/          Local demo tooling (traffic simulator)
+automations/      Droid workflow prompts (triage, fix, weekly report, dependency scan)
+runbook/          Triage runbook notes maintained by Droid
 tests/
   unit/           pytest unit tests (mongomock, no database needed)
   e2e/            Playwright smoke test
@@ -99,6 +101,22 @@ You can also ask Droid directly in a PR or issue comment (`.github/workflows/dro
 - `@droid fill` writes the PR description.
 
 Droid comments and suggests; a human code owner still approves and merges every change.
+
+## Automations and runbook
+
+The prompts for the Droid workflows live in `automations/`. Each file has a short header and the
+prompt Droid runs; `automations/README.md` explains how to extract and run them.
+
+| File                     | Workflow | Trigger |
+|--------------------------|----------|---------|
+| `triage.md`              | Triage a help-desk ticket | Issue opened with the `helpdesk` label (run with `droid exec`) |
+| `fix-with-guardrails.md` | Fix a triaged issue and open a PR | Manual, after triage labels the issue `fix-needed` |
+| `weekly-report.md`       | Weekly reliability report | Scheduled, Fridays 4pm America/New_York |
+| `cve-scan.md`            | Dependency vulnerability scan and upgrade PR | Scheduled, Mondays 13:00 UTC |
+
+Weekly reports are proposed by pull request under `reports/weekly/`. Triage keeps its running notes
+in `runbook/triage-notes.md`. These workflows only author changes; a human code owner approves and
+merges every PR they open.
 
 ## Contributing
 
