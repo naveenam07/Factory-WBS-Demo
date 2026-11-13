@@ -1,0 +1,17 @@
+.venv/
+.venv-audit/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+htmlcov/
+coverage.xml
+.coverage
+.coverage.*
+logs/*.log
+tests/e2e/screenshots/*.png
+*.env
+.env
