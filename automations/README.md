@@ -8,8 +8,9 @@ Prompts for the WaveBank trading-app agentic workflows. Each file has a short he
 | `fix-with-guardrails.md` | Workflow 2: fix a triaged issue and open a PR | Manual, after triage labels an issue `fix-needed`. Replace `{ISSUE}` with the issue number. |
 | `weekly-report.md` | Workflow 3: weekly reliability report | Scheduled Factory Automation, Fridays 4pm America/New_York. |
 | `cve-scan.md` | Case A: dependency vulnerability scan and upgrade PR | Scheduled Factory Automation, Mondays 13:00 UTC. |
+| `slack-intake.md` | Slack intake: help-desk issue, triage and fix PR for a report in #trading-app-support | A new top-level message in #trading-app-support. The Slack intake watcher on the Droid Computer runs it with `droid exec --auto high`, one report at a time. |
 
-GitHub has no native "issue opened" trigger for Droid here, and the Slack-triggered triage Automation is not configured, so triage runs headlessly from the repo root on the Droid Computer.
+GitHub has no native "issue opened" trigger for Droid here, and the Slack-triggered triage Automation is not configured, so triage runs headlessly from the repo root on the Droid Computer. Slack reports reach triage through `slack-intake.md`, which a watcher on the Droid Computer runs for each new top-level message in #trading-app-support.
 
 Extract a prompt:
 
