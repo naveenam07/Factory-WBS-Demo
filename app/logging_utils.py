@@ -23,6 +23,12 @@ class RequestContext:
 _request_context: ContextVar[RequestContext | None] = ContextVar("request_context", default=None)
 
 
+def mask_pii(value: object) -> str:
+    """Mask an account number, SSN or tax ID for logging, keeping the last four characters only."""
+    text = "" if value is None else str(value)
+    return f"****{text[-4:]}" if len(text) > 4 else "****"
+
+
 def new_trace_id() -> str:
     return uuid.uuid4().hex
 
