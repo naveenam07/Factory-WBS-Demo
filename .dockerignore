@@ -1,0 +1,14 @@
+.git
+.venv
+.venv-audit
+**/__pycache__
+.pytest_cache
+.ruff_cache
+htmlcov
+coverage.xml
+.coverage
+*.egg-info
+logs
+tests
+deploy
+scripts
