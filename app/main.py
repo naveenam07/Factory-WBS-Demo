@@ -1,11 +1,13 @@
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 import anyio.to_thread
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from pymongo.database import Database
 
-from app.api import accounts, health, orders, positions, transfers
+from app.api import accounts, health, orders, portal, positions, transfers
 from app.config import Settings, load_settings
 from app.db import create_database, initialize_database
 from app.error_handlers import register_error_handlers
@@ -13,6 +15,8 @@ from app.logging_utils import configure_logging
 from app.middleware import RequestContextMiddleware
 from app.repositories.mongo import build_repositories
 from app.services.market_data import MarketDataClient
+
+STATIC_DIR = Path(__file__).resolve().parent / "static"
 
 
 def create_app(database: Database | None = None, settings: Settings | None = None) -> FastAPI:
@@ -38,8 +42,9 @@ def create_app(database: Database | None = None, settings: Settings | None = Non
     app.add_middleware(RequestContextMiddleware)
     register_error_handlers(app)
 
-    for module in (health, accounts, positions, orders, transfers):
+    for module in (health, accounts, positions, orders, transfers, portal):
         app.include_router(module.router)
+    app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
     return app
 
 

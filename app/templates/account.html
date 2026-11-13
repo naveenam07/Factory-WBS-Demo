@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Account - WaveBank Advisor{% endblock %}
+{% block content %}
+<section data-page="account" data-account-id="{{ account_id }}" data-advisor-id="{{ advisor_id }}">
+  <p><a href="/advisors/{{ advisor_id }}">&larr; Back to clients</a></p>
+  <h1 id="account-title">Account {{ account_id }}</h1>
+  <dl id="account-details" class="details"></dl>
+
+  <h2>Positions</h2>
+  <table class="data-table">
+    <thead>
+      <tr><th>Symbol</th><th>Quantity</th><th>Cost basis</th><th>Price</th><th>Market value</th></tr>
+    </thead>
+    <tbody id="positions-rows">
+      <tr><td colspan="5">Loading positions...</td></tr>
+    </tbody>
+  </table>
+
+  <div class="forms">
+    <form id="trade-form" class="card">
+      <h2>Place trade</h2>
+      <label>Symbol <input name="symbol" required placeholder="AAPL"></label>
+      <label>Side
+        <select name="side">
+          <option value="buy">Buy</option>
+          <option value="sell">Sell</option>
+        </select>
+      </label>
+      <label>Quantity <input name="quantity" type="number" min="1" step="1" required></label>
+      <button type="submit">Place trade</button>
+    </form>
+
+    <form id="transfer-form" class="card">
+      <h2>Move money</h2>
+      <label>To account <select name="to_account_id" id="to-account" required></select></label>
+      <label>Amount ($) <input name="amount" type="number" min="0.01" step="0.01" required></label>
+      <button type="submit">Move money</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

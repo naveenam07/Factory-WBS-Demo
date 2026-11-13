@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Clients - WaveBank Advisor{% endblock %}
+{% block content %}
+<section data-page="clients" data-advisor-id="{{ advisor_id }}">
+  <h1>Clients for <span id="advisor-name">{{ advisor_id }}</span></h1>
+  <table class="data-table">
+    <thead>
+      <tr><th>Client name</th><th>Account type</th><th>Last 4</th><th></th></tr>
+    </thead>
+    <tbody id="client-rows">
+      <tr><td colspan="4">Loading clients...</td></tr>
+    </tbody>
+  </table>
+</section>
+{% endblock %}

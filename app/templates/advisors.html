@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Choose an advisor</h1>
+<ul class="advisor-list">
+  {% for advisor in advisors %}
+  <li><a href="/advisors/{{ advisor.advisor_id }}"><strong>{{ advisor.advisor_id }}</strong> {{ advisor.name }}</a></li>
+  {% endfor %}
+</ul>
+{% endblock %}

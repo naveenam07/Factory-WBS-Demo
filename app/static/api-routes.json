@@ -1,0 +1,6 @@
+{
+  "accounts": "/api/v1/advisors/{advisor_id}/accounts",
+  "positions": "/api/v1/accounts/{account_id}/positions",
+  "orders": "/api/v1/orders",
+  "transfers": "/api/v2/transfers"
+}

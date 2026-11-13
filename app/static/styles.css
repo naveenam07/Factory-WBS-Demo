@@ -1,0 +1,145 @@
+:root {
+  --navy: #0b2545;
+  --blue: #1d5fd1;
+  --light-blue: #e8f0fc;
+  --border: #d5deea;
+  --text: #1c2735;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--text);
+  background: #f5f8fc;
+}
+
+.site-header {
+  background: var(--navy);
+  border-bottom: 4px solid var(--blue);
+  padding: 14px 24px;
+}
+
+.brand {
+  color: #fff;
+  font-size: 1.35rem;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+h1, h2 { color: var(--navy); }
+
+a { color: var(--blue); }
+
+.banner {
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.banner-error { background: #fde8e8; color: #9b1c1c; border: 1px solid #f05252; }
+.banner-success { background: #e6f6ec; color: #146c2e; border: 1px solid #31a35a; }
+
+.advisor-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+}
+
+.advisor-list a {
+  display: block;
+  padding: 12px 14px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.advisor-list a:hover { background: var(--light-blue); }
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border: 1px solid var(--border);
+}
+
+.data-table th {
+  background: var(--navy);
+  color: #fff;
+  text-align: left;
+  padding: 8px 12px;
+}
+
+.data-table td {
+  padding: 8px 12px;
+  border-top: 1px solid var(--border);
+}
+
+.data-table tr.clickable { cursor: pointer; }
+.data-table tr.clickable:hover { background: var(--light-blue); }
+
+.details {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 16px;
+}
+
+.details dt { font-weight: 600; color: var(--navy); }
+.details dd { margin: 0; }
+
+.forms {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.card h2 { margin-top: 0; }
+
+.card label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.card input, .card select {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  padding: 7px 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font: inherit;
+}
+
+button {
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 9px 16px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:hover { background: var(--navy); }
