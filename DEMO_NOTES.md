@@ -1,7 +1,7 @@
 # Demo notes: planted defects
 
 This file is for the demo presenter. The defects below are planted on purpose so the Factory
-workflows have real problems to find from tickets and logs. Do not fix them on `main`.
+workflows have real problems to find from tickets and logs. Do not fix them on `main1`.
 
 ## 1. Move money returns 404
 
