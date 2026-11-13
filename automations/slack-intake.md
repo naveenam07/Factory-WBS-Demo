@@ -19,7 +19,7 @@ Rules for the whole run:
 
 1. Acknowledge: reply in the report's thread, for example "Thanks, Droid is on it. I'm opening a help-desk ticket and triaging this now."
 2. Create the help-desk issue:
-   - Find the next free ticket number: run gh issue list --state all --limit 500 --json number,title, take the highest HD-48xx in any title, and add 1.
+   - Find the next free ticket number: run gh issue list --state all --limit 500 --json number,title, take the highest HD-<number> ticket ID in any title (the numbers are in the HD-48xx range today, for example HD-4825), and add 1.
    - Fill the fields of .github/ISSUE_TEMPLATE/helpdesk-ticket.md from the message: Ticket ID; Reported by (the Slack user, "via #trading-app-support", and the message permalink); Advisor ID; Screen; What happened (the reporter's words, PII removed); Time (the message time, UTC); Reference (trace_id) from the message, or "n/a"; Business impact.
    - Create it with gh issue create --title "HD-48xx: <short summary>" --label helpdesk and the filled body.
    - Reply in the report's thread with the ticket ID and the issue link.
@@ -32,7 +32,7 @@ Rules for the whole run:
    - NOISE (not a code problem, for example a password reset): comment that the IT Service Desk handles it, add the noise label, close the issue, reply in the report's thread pointing the reporter to the IT Service Desk, then go to step 6. No #trading-incidents alert and no PR.
 4. If the issue is labeled fix-needed, run the fix workflow now, without waiting for approval: follow the prompt in automations/fix-with-guardrails.md (its text block) with {ISSUE} replaced by the new issue number. The PR title starts with this ticket's ID in brackets ("[HD-48xx] ...") and the body starts with "Fixes #<new issue number>". Leave the PR open.
 5. Reply in the report's thread with the PR link and one line saying a human CODEOWNER must approve and merge it.
-6. Restore the demo: git checkout main1 and git pull --ff-only, then make install. If this run deployed another branch (the fix workflow does), or curl -s http://localhost:30080/static/api-routes.json does not map transfers to /api/v2/transfers, save the pod logs as above and run make deploy. Otherwise (for example after a NOISE report) skip the redeploy so the pod logs stay available. Confirm that curl -s http://localhost:30080/static/api-routes.json still maps transfers to /api/v2/transfers (retry after a few seconds if an old pod answers), and that the working tree is clean.
+6. Restore the demo: git checkout main1 and git pull --ff-only, then make install. The expected route map is main1's app/static/api-routes.json (today it maps transfers to /api/v2/transfers, so the Move money 404 stays visible for the next report). If this run deployed another branch (the fix workflow does), or curl -s http://localhost:30080/static/api-routes.json differs from main1's file, save the pod logs as above and run make deploy. Otherwise (for example after a NOISE report) skip the redeploy so the pod logs stay available. Confirm that the served api-routes.json matches main1's file, including the transfers entry (retry after a few seconds if an old pod answers), and that the working tree is clean.
 
 Finish with a short summary: ticket ID, issue URL, classification, PR URL (or "none"), and the permalinks of the Slack replies you posted.
 ```
