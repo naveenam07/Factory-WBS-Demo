@@ -33,6 +33,12 @@ def _validation_message(exc: RequestValidationError) -> str:
 async def handle_http_exception(request: Request, exc: StarletteHTTPException) -> JSONResponse:
     if exc.status_code == 404 and exc.detail == "Not Found":
         message = f"No route matches {request.method} {request.url.path}"
+        try:
+            body = await request.json()
+        except ValueError:
+            body = None
+        if isinstance(body, dict):
+            bind_advisor_id(body.get("advisor_id"))
     elif isinstance(exc.detail, str) and exc.detail:
         message = exc.detail
     else:
