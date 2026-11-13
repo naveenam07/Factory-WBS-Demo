@@ -85,6 +85,21 @@ Help-desk tickets are GitHub issues created from the **Help-desk ticket** templa
 `helpdesk`. They stand in for ServiceNow and Jira. Triage uses these labels: `droid-triage`,
 `fix-needed`, `duplicate`, `noise`, `sev-p1`, `sev-p2` and `sev-p3`.
 
+## Code review
+
+Every pull request gets an automatic Droid code review and security review from the Droid GitHub
+Action (`.github/workflows/droid-review.yml`). Droid re-reviews when new commits are pushed and posts
+its findings as `factory-droid[bot]`. The repo-specific rules it applies live in
+`.factory/skills/review-guidelines` and `.factory/skills/security-review-guidelines`.
+
+You can also ask Droid directly in a PR or issue comment (`.github/workflows/droid.yml`):
+
+- `@droid review` runs a code review of the PR diff.
+- `@droid security` runs a security review of the PR diff.
+- `@droid fill` writes the PR description.
+
+Droid comments and suggests; a human code owner still approves and merges every change.
+
 ## Contributing
 
 See [AGENTS.md](AGENTS.md) for the rules every change follows and [CODEOWNERS](CODEOWNERS) for
