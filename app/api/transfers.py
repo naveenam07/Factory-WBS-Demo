@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 
 from app.api.deps import RepositoriesDep
 from app.api.schemas import TransferRequest, TransferResponse
-from app.logging_utils import bind_advisor_id, current_trace_id, get_logger
+from app.logging_utils import bind_advisor_id, current_trace_id, get_logger, mask_pii
 from app.services.transfers import TransferInstruction, TransferService
 
 router = APIRouter(prefix="/api/v1", tags=["transfers"])
@@ -26,15 +26,13 @@ def create_transfer(
     trace_id = current_trace_id()
     result = service.transfer(TransferInstruction(**body.model_dump()), trace_id=trace_id)
     logger.info(
-        "Transfer %s completed: $%.2f from account %s (%s, SSN %s) to account %s (%s, SSN %s)",
+        "Transfer %s completed: $%.2f from account %s (%s) to account %s (%s)",
         result.confirmation_number,
         result.amount,
-        result.source.account_number,
-        result.source.client_name,
-        result.source.client_ssn,
-        result.destination.account_number,
-        result.destination.client_name,
-        result.destination.client_ssn,
+        result.source.account_id,
+        mask_pii(result.source.account_number),
+        result.destination.account_id,
+        mask_pii(result.destination.account_number),
     )
     return TransferResponse(
         confirmation_number=result.confirmation_number,
