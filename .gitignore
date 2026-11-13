@@ -1,3 +1,4 @@
+# Python environments and build output
 .venv/
 .venv-audit/
 __pycache__/
@@ -5,13 +6,32 @@ __pycache__/
 *.egg-info/
 build/
 dist/
+
+# Tool caches
 .pytest_cache/
 .ruff_cache/
+.mypy_cache/
+
+# Coverage reports
 htmlcov/
 coverage.xml
 .coverage
 .coverage.*
+
+# Generated logs and screenshots (keep the folders)
 logs/*.log
 tests/e2e/screenshots/*.png
-*.env
+
+# Secrets and local environment files
 .env
+.env.*
+*.env
+*.pem
+*.key
+secrets/
+kubeconfig*
+
+# Editors and OS files
+.idea/
+.vscode/
+.DS_Store
