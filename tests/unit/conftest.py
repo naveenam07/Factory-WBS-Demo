@@ -1,3 +1,4 @@
+import logging
 from collections.abc import Iterator
 
 import mongomock
@@ -6,6 +7,9 @@ from fastapi import APIRouter, FastAPI
 from fastapi.testclient import TestClient
 from pymongo.database import Database
 
+from app.config import Settings
+from app.logging_utils import LOGGER_NAME, JsonFormatter
+from app.main import create_app
 from app.repositories.base import Repositories
 from app.repositories.mongo import build_repositories, ensure_indexes
 
@@ -71,3 +75,34 @@ def make_client(repositories: Repositories) -> Iterator:
     yield _make
     for client in clients:
         client.close()
+
+@pytest.fixture
+def app_client(database: Database) -> Iterator[TestClient]:
+    settings = Settings(
+        mongo_url="mongodb://unused",
+        mongo_db="wavebank_test",
+        market_data_url=None,
+        market_data_timeout=1.0,
+        startup_attempts=1,
+        startup_retry_seconds=0.0,
+    )
+    # No context manager: the lifespan would try to seed a real MongoDB.
+    client = TestClient(create_app(database=database, settings=settings))
+    yield client
+    client.close()
+
+
+@pytest.fixture
+def app_logs(app_client: TestClient) -> Iterator[list[str]]:
+    lines: list[str] = []
+
+    class _Collect(logging.Handler):
+        def emit(self, record: logging.LogRecord) -> None:
+            lines.append(self.format(record))
+
+    handler = _Collect()
+    handler.setFormatter(JsonFormatter())
+    app_logger = logging.getLogger(LOGGER_NAME)
+    app_logger.addHandler(handler)
+    yield lines
+    app_logger.removeHandler(handler)

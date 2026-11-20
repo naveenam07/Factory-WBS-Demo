@@ -35,8 +35,20 @@ def test_advisor_smoke(page: Page) -> None:
     screenshot(page, "04-trade-placed")
 
     page.locator("#transfer-form input[name=amount]").fill("500")
-    page.get_by_role("button", name="Move money").click()
+    with page.expect_response(
+        lambda r: r.request.method == "POST" and "/transfers" in r.url
+    ) as transfer:
+        page.get_by_role("button", name="Move money").click()
     expect(banner).not_to_contain_text("Trade placed")
     screenshot(page, "05-move-money")
+    assert transfer.value.status == 201, f"{transfer.value.url} returned {transfer.value.status}"
     expect(banner).to_contain_text("Money moved")
     expect(banner).to_have_class(re.compile("banner-success"))
+
+
+def test_portal_route_map_matches_live_api(page: Page) -> None:
+    routes = page.request.get(f"{BASE_URL}/static/api-routes.json").json()
+    live_paths = page.request.get(f"{BASE_URL}/openapi.json").json()["paths"]
+
+    missing = {name: path for name, path in routes.items() if path not in live_paths}
+    assert not missing, f"api-routes.json entries with no live API route: {missing}"

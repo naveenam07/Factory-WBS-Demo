@@ -75,7 +75,7 @@ class TransferRequest(BaseModel):
     advisor_id: str
     from_account_id: str
     to_account_id: str
-    amount: float = Field(gt=0)
+    amount: float = Field(gt=0, allow_inf_nan=False)
 
 
 class TransferResponse(BaseModel):
